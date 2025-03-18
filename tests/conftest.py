@@ -1,24 +1,9 @@
-import shutil
-from tempfile import mkdtemp
-
+import logging
 import pytest
-from pyspark.sql import SparkSession
-
+from solution.jay_solution import *
 
 @pytest.fixture(scope="session")
 def spark():
-    spark = (
-        SparkSession.builder
-                    .master("local[2]")
-                    .appName("DataTest")
-                    .config("spark.executorEnv.PYTHONHASHSEED", "0")
-                    .getOrCreate()
-    )
-    return spark
-
-
-@pytest.fixture(scope="function")
-def tmp_dir():
-    output_dir = mkdtemp()
-    yield output_dir
-    shutil.rmtree(output_dir)
+    spark = spark_session()
+    yield spark
+    spark.stop()
